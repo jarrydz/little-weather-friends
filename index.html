@@ -130,16 +130,13 @@
   .detail{
     position:fixed;inset:0;z-index:40;
     overflow-y:auto;overscroll-behavior:contain;
-    background:transparent;
+    background:var(--wash,#FAF8F5);
     visibility:hidden;
     -webkit-overflow-scrolling:touch;
   }
   .detail.open{visibility:visible}
-  .detail-bg{
-    position:fixed;inset:0;z-index:-1;background:var(--wash);
-    will-change:opacity;
-  }
   .detail-inner{
+    position:relative;z-index:1;
     max-width:1440px;margin:0 auto;
     padding:clamp(76px,7vw,104px) var(--pad) clamp(56px,7vw,96px);
     display:grid;grid-template-columns:1fr;gap:clamp(28px,4vw,64px);
@@ -152,7 +149,7 @@
     position:fixed;top:0;left:0;right:0;z-index:42;
     padding:16px var(--pad);
     display:flex;justify-content:space-between;align-items:center;gap:16px;
-    background:linear-gradient(to bottom,var(--wash) 55%,transparent);
+    background:linear-gradient(to bottom,var(--wash,#FAF8F5) 55%,var(--wash-0,rgba(250,248,245,0)));
     pointer-events:none;
   }
   .backbar>*{pointer-events:auto}
@@ -197,6 +194,8 @@
   .fx{opacity:0;transform:translateY(18px)}
   .detail.open .fx{opacity:1;transform:none;transition:opacity .6s var(--ease),transform .6s var(--ease)}
   .detail.open .fx{transition-delay:calc(var(--i,0) * 55ms + 130ms)}
+  /* failsafe — after the reveal window the copy is pinned visible no matter what */
+  .detail.revealed .fx{opacity:1!important;transform:none!important;transition:none!important}
 
   .d-eyebrow{display:flex;gap:14px;align-items:center;color:var(--accent);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
   .d-eyebrow span{color:var(--ink-40);font-weight:500}
@@ -277,7 +276,6 @@
 
 <!-- ===================== DETAIL ===================== -->
 <section class="detail" id="detail" aria-hidden="true">
-  <div class="detail-bg" id="detailBg"></div>
   <div class="backbar">
     <button class="back" id="back" aria-label="Back to all friends">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
@@ -524,14 +522,62 @@ function renderDetail(d,i){
         <span><span class="eyebrow">Next</span><strong>${next.name}</strong></span>
       </button>
     </div>`;
+  const w = wash(d.c);
+  washRGB = `rgb(${w.join(",")})`;
+  washRGBA0 = `rgba(${w.join(",")},0)`;
   detail.style.setProperty("--c", d.c);
   detail.style.setProperty("--accent", d.accent);
-  detail.style.setProperty("--wash", `color-mix(in srgb, ${d.c} 15%, #FAF8F5)`);
+  detail.style.setProperty("--wash", washRGB);
+  detail.style.setProperty("--wash-0", washRGBA0);
   document.title = `${d.name} — Little Weather Friends`;
 }
 
-const bg = $("#detailBg");
 const EASE = "cubic-bezier(.22,1,.36,1)";
+
+/* wash = character colour at 15% over the paper, computed here rather than with
+   CSS color-mix() so it works on older mobile Safari too */
+const PAPER = [250,248,245];
+const wash = hex => [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16))
+                           .map((v,i)=>Math.round(v*0.15 + PAPER[i]*0.85));
+let washRGB = "rgb(250,248,245)", washRGBA0 = "rgba(250,248,245,0)";
+let bgAnim = null, homeAnim = null;
+const fadeBg = (from,to,duration,easing) => {
+  if(bgAnim) bgAnim.cancel();
+  bgAnim = detail.animate([{backgroundColor:from},{backgroundColor:to}],
+                          {duration, easing, fill:"forwards"});
+  return bgAnim;
+};
+const fadeHome = (from,to,duration,easing) => {
+  if(homeAnim) homeAnim.cancel();
+  homeAnim = home.animate(from.map((f,i)=>({opacity:f, transform:to[i]})),
+                          {duration, easing, fill:"forwards"});
+};
+/* the copy must never be left invisible because an animation misbehaved */
+let revealTimer = null;
+const FX_PINS = ["opacity","transform","transition"];
+/* Enforced in JS with inline !important — the highest-priority author styles there
+   are. Beats any stylesheet rule, any leftover fill:forwards animation, and any
+   engine that decides not to run the entrance transition. */
+const pinVisible = () => {
+  detail.classList.add("revealed");
+  inner.querySelectorAll(".fx").forEach(el=>{
+    el.getAnimations().forEach(a=>{ try{ a.cancel(); }catch(e){} });
+    el.style.setProperty("opacity","1","important");
+    el.style.setProperty("transform","none","important");
+    el.style.setProperty("transition","none","important");
+  });
+};
+const unpin = () => {
+  detail.classList.remove("revealed");
+  inner.querySelectorAll(".fx").forEach(el=>FX_PINS.forEach(k=>el.style.removeProperty(k)));
+};
+const revealSoon = () => {
+  clearTimeout(revealTimer);
+  unpin();
+  if(REDUCED){ pinVisible(); return; }
+  revealTimer = setTimeout(pinVisible, 1100);
+};
+const cancelReveal = () => { clearTimeout(revealTimer); unpin(); };
 
 /* history is unavailable in sandboxed iframes (about:srcdoc) — degrade quietly */
 const CAN_HISTORY = (()=>{ try{ history.replaceState(null,"",location.href); return true; }catch(e){ return false; } })();
@@ -552,6 +598,7 @@ function open(i){
   detail.scrollTop = 0;
   void detail.offsetWidth;            // flush styles so the .fx transitions actually run
   detail.classList.add("open");
+  revealSoon();
   document.body.classList.add("is-locked");
   setUrl("#"+d.id);
 
@@ -568,9 +615,8 @@ function open(i){
      {transform:"translate(0,0) scale(1)", borderRadius:"28px"}],
     {duration:680, easing:EASE, fill:"backwards"}
   );
-  bg.animate([{opacity:0},{opacity:1}], {duration:420, easing:"ease-out", fill:"backwards"});
-  home.animate([{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(.97)"}],
-    {duration:440, easing:"cubic-bezier(.55,0,.65,.2)", fill:"forwards"});
+  fadeBg(washRGBA0, washRGB, 420, "ease-out");
+  fadeHome([1,0], ["scale(1)","scale(.97)"], 440, "cubic-bezier(.55,0,.65,.2)");
 
   setTimeout(()=>{ animating = false; }, 340);
 }
@@ -581,10 +627,10 @@ function goTo(i, dir){
   detail.scrollTop = 0;
   renderDetail(DATA[i], i); current = i;
   setUrl("#"+DATA[i].id);
+  revealSoon();
 
-  if(REDUCED){ animating = false; return; }
+  if(REDUCED){ detail.classList.add("revealed"); animating = false; return; }
   const shift = dir > 0 ? 34 : -34;
-  bg.animate([{opacity:.4},{opacity:1}],{duration:420,easing:"ease-out",fill:"backwards"});
   inner.querySelectorAll(".hero-col, .text-col, .next-strip").forEach((el,n)=>{
     el.animate([{opacity:0, transform:`translateX(${shift}px)`},{opacity:1, transform:"none"}],
       {duration:560, delay:n*45, easing:EASE, fill:"backwards"});
@@ -595,6 +641,7 @@ function goTo(i, dir){
 /* ---------- close: fly the hero back to its card ---------- */
 function close(){
   if(animating || current < 0) return; animating = true;
+  cancelReveal();
   const hero = document.getElementById("heroMedia");
   const target = document.getElementById("cm-"+current);
 
@@ -617,8 +664,7 @@ function close(){
     }
   }
 
-  home.animate([{opacity:0,transform:"scale(.97)"},{opacity:1,transform:"scale(1)"}],
-    {duration:540, easing:EASE, fill:"forwards"});
+  fadeHome([0,1], ["scale(.97)","scale(1)"], 540, EASE);
 
   if(REDUCED || !hero || !target){ finish(); return; }
 
@@ -630,7 +676,7 @@ function close(){
   inner.querySelectorAll(".fx").forEach(el=>{
     el.animate([{opacity:1},{opacity:0}],{duration:200,easing:"ease-in",fill:"forwards"});
   });
-  bg.animate([{opacity:1},{opacity:0}],{duration:520,easing:"ease-in",fill:"forwards"});
+  fadeBg(washRGB, washRGBA0, 520, "ease-in");
   const a = hero.animate(
     [{transform:"translate(0,0) scale(1)", borderRadius:"28px"},
      {transform:`translate(${dx}px,${dy}px) scale(${s})`, borderRadius:`${22/s}px`}],
