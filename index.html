@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Little Weather Friends — Character Bible</title>
+<meta name="description" content="Ten little weather friends. Every kind of weather is a kind of feeling.">
+<link rel="canonical" href="https://jarrydz.github.io/little-weather-friends/">
+<meta name="theme-color" content="#FAF8F5">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Little Weather Friends">
+<meta property="og:title" content="Little Weather Friends — Character Bible">
+<meta property="og:description" content="Ten small creatures who are the weather. Every kind of weather is a kind of feeling.">
+<meta property="og:url" content="https://jarrydz.github.io/little-weather-friends/">
+<meta property="og:image" content="https://jarrydz.github.io/little-weather-friends/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='55' r='38' fill='%23FBDA54'/><circle cx='38' cy='50' r='5'/><circle cx='62' cy='50' r='5'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF8F5;
+    --ink:#14120F;
+    --ink-60:rgba(20,18,15,.60);
+    --ink-40:rgba(20,18,15,.40);
+    --ink-14:rgba(20,18,15,.14);
+    --ink-08:rgba(20,18,15,.08);
+    /* masthead two-tone — swap these two values to retune the title */
+    --green:#8BD450;
+    --pink:#FF3E9D;
+    --serif:"Instrument Serif","Iowan Old Style",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --ease:cubic-bezier(.22,1,.36,1);
+    --ease-in:cubic-bezier(.55,0,.65,.2);
+    --dur:620ms;
+    --pad:clamp(20px,4.5vw,64px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:var(--sans);
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  body.is-locked{overflow:hidden}
+  img{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  ::selection{background:#14120F;color:#FAF8F5}
+
+  /* ---------- shared type ---------- */
+  .eyebrow{
+    font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-40);
+  }
+  .display{font-family:var(--serif);font-weight:400;line-height:.94;letter-spacing:-.02em}
+
+  /* ---------- home ---------- */
+  .home{padding:0 var(--pad) 96px;max-width:1560px;margin:0 auto}
+  .masthead{
+    padding:clamp(56px,9vw,120px) 0 clamp(40px,6vw,72px);
+    display:grid;grid-template-columns:1fr;gap:28px;
+    border-bottom:1px solid var(--ink-14);
+  }
+  @media(min-width:900px){
+    .masthead{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:64px;align-items:end}
+  }
+  .masthead h1{font-size:clamp(52px,9.5vw,132px);margin-top:18px;color:var(--green)}
+  .masthead h1 em{font-style:italic;color:var(--pink)}
+  .lede{font-size:clamp(16px,1.5vw,19px);line-height:1.55;color:var(--ink-60);max-width:46ch}
+  .lede strong{color:var(--ink);font-weight:500}
+  .meta-row{
+    display:flex;gap:32px;flex-wrap:wrap;
+    padding:22px 0 0;font-size:12px;letter-spacing:.06em;color:var(--ink-40);
+  }
+  .meta-row b{display:block;color:var(--ink);font-weight:500;font-size:13px;letter-spacing:0;margin-top:4px}
+
+  .grid{
+    list-style:none;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:clamp(16px,2.2vw,34px) clamp(12px,1.6vw,26px);
+    padding-top:clamp(36px,5vw,60px);
+  }
+  @media(min-width:640px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(min-width:1040px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  @media(min-width:1360px){.grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+
+  .card{
+    display:block;width:100%;text-align:left;
+    opacity:0;transform:translateY(22px);
+    transition:opacity .7s var(--ease),transform .7s var(--ease);
+  }
+  .card.in{opacity:1;transform:none}
+  .card-media{
+    position:relative;aspect-ratio:1;border-radius:22px;overflow:hidden;
+    background:var(--c);
+    transition:transform .55s var(--ease),box-shadow .55s var(--ease);
+    box-shadow:0 1px 2px rgba(20,18,15,.05);
+  }
+  .card-media img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+  .card-media::after{
+    content:"";position:absolute;inset:0;border-radius:22px;
+    box-shadow:inset 0 0 0 1px rgba(20,18,15,.07);
+  }
+  .card:hover .card-media,.card:focus-visible .card-media{
+    transform:translateY(-8px);
+    box-shadow:0 22px 44px -20px rgba(20,18,15,.42);
+  }
+  .card:hover .card-media img{transform:scale(1.045)}
+  .card:focus-visible{outline:none}
+  .card:focus-visible .card-media::after{box-shadow:inset 0 0 0 2.5px var(--ink)}
+  .card-body{display:flex;align-items:baseline;gap:10px;padding:16px 4px 0}
+  .card-num{font-size:11px;color:var(--ink-40);font-variant-numeric:tabular-nums;letter-spacing:.06em;padding-top:4px}
+  .card-name{font-family:var(--serif);font-size:clamp(21px,2vw,27px);line-height:1.05;letter-spacing:-.01em}
+  .card-role{font-size:12px;color:var(--ink-40);padding:5px 4px 0 30px;letter-spacing:.02em}
+
+  .colophon{
+    margin-top:clamp(64px,9vw,120px);padding-top:26px;border-top:1px solid var(--ink-14);
+    display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+    font-size:12px;color:var(--ink-40);
+  }
+
+  /* ---------- detail ---------- */
+  .detail{
+    position:fixed;inset:0;z-index:40;
+    overflow-y:auto;overscroll-behavior:contain;
+    background:transparent;
+    visibility:hidden;
+    -webkit-overflow-scrolling:touch;
+  }
+  .detail.open{visibility:visible}
+  .detail-bg{
+    position:fixed;inset:0;z-index:-1;background:var(--wash);
+    will-change:opacity;
+  }
+  .detail-inner{
+    max-width:1440px;margin:0 auto;
+    padding:clamp(76px,7vw,104px) var(--pad) clamp(56px,7vw,96px);
+    display:grid;grid-template-columns:1fr;gap:clamp(28px,4vw,64px);
+  }
+  @media(min-width:940px){
+    .detail-inner{grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);align-items:start}
+  }
+
+  .backbar{
+    position:fixed;top:0;left:0;right:0;z-index:42;
+    padding:16px var(--pad);
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+    background:linear-gradient(to bottom,var(--wash) 55%,transparent);
+    pointer-events:none;
+  }
+  .backbar>*{pointer-events:auto}
+  .back{
+    display:inline-flex;align-items:center;gap:9px;
+    font-size:13px;font-weight:500;letter-spacing:.01em;
+    padding:9px 16px 9px 12px;border-radius:999px;
+    background:rgba(250,248,245,.72);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    box-shadow:inset 0 0 0 1px var(--ink-14);
+    transition:transform .35s var(--ease),box-shadow .35s var(--ease),background .35s var(--ease);
+  }
+  .back:hover{transform:translateX(-4px);box-shadow:inset 0 0 0 1px rgba(20,18,15,.3)}
+  .back svg{width:15px;height:15px;transition:transform .35s var(--ease)}
+  .back:hover svg{transform:translateX(-3px)}
+  .pager{display:flex;gap:6px}
+  .pager button{
+    width:38px;height:38px;border-radius:999px;
+    display:grid;place-items:center;
+    background:rgba(250,248,245,.72);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    box-shadow:inset 0 0 0 1px var(--ink-14);
+    transition:box-shadow .3s var(--ease),transform .3s var(--ease);
+  }
+  .pager button:hover{box-shadow:inset 0 0 0 1px rgba(20,18,15,.3);transform:scale(1.06)}
+  .pager svg{width:15px;height:15px}
+
+  .hero-col{position:relative}
+  @media(min-width:940px){.hero-col{position:sticky;top:96px}}
+  .hero-media{
+    position:relative;aspect-ratio:1;border-radius:28px;overflow:hidden;
+    background:var(--c);transform-origin:top left;will-change:transform;
+    box-shadow:0 40px 80px -48px rgba(20,18,15,.5);
+  }
+  .hero-media img{width:100%;height:100%;object-fit:cover}
+  .hero-media::after{content:"";position:absolute;inset:0;border-radius:28px;box-shadow:inset 0 0 0 1px rgba(20,18,15,.08)}
+  .swatches{display:flex;gap:8px;padding:18px 4px 0;flex-wrap:wrap;align-items:center}
+  .swatch{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink-40);letter-spacing:.04em}
+  .swatch i{width:14px;height:14px;border-radius:5px;box-shadow:inset 0 0 0 1px rgba(20,18,15,.14)}
+
+  /* staggered text */
+  .fx{opacity:0;transform:translateY(18px)}
+  .detail.open .fx{opacity:1;transform:none;transition:opacity .6s var(--ease),transform .6s var(--ease)}
+  .detail.open .fx{transition-delay:calc(var(--i,0) * 55ms + 130ms)}
+
+  .d-eyebrow{display:flex;gap:14px;align-items:center;color:var(--accent);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+  .d-eyebrow span{color:var(--ink-40);font-weight:500}
+  .d-name{font-size:clamp(46px,7.2vw,96px);margin:14px 0 0}
+  .d-tagline{font-family:var(--serif);font-style:italic;font-size:clamp(21px,2.6vw,32px);line-height:1.28;color:var(--ink-60);margin-top:18px;max-width:24ch}
+  .d-bio{font-size:clamp(15px,1.35vw,17.5px);line-height:1.65;color:var(--ink-60);margin-top:26px;max-width:52ch}
+  .d-bio p+p{margin-top:14px}
+
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:26px}
+  .chip{
+    font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+    padding:7px 13px;border-radius:999px;
+    color:var(--accent);box-shadow:inset 0 0 0 1px currentColor;
+  }
+
+  .quote{
+    margin-top:34px;padding:26px 28px;border-radius:20px;
+    background:rgba(255,255,255,.62);box-shadow:inset 0 0 0 1px var(--ink-08);
+  }
+  .quote p:not(.eyebrow){font-family:var(--serif);font-size:clamp(22px,2.4vw,30px);line-height:1.24;letter-spacing:-.01em}
+  .quote p.eyebrow{margin-bottom:12px;font-family:var(--sans)}
+
+  .specs{margin-top:38px;border-top:1px solid var(--ink-14)}
+  .spec{
+    display:grid;grid-template-columns:1fr;gap:4px;
+    padding:16px 2px;border-bottom:1px solid var(--ink-14);
+  }
+  @media(min-width:560px){.spec{grid-template-columns:150px minmax(0,1fr);gap:24px;align-items:baseline}}
+  .spec dt{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-40)}
+  .spec dd{font-size:15.5px;line-height:1.5}
+  .spec dd b{font-weight:500}
+
+  .next-strip{
+    grid-column:1/-1;margin-top:clamp(40px,6vw,72px);padding-top:26px;
+    border-top:1px solid var(--ink-14);
+    display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+  }
+  .next-btn{display:flex;align-items:center;gap:14px;text-align:left}
+  .next-btn img{width:56px;height:56px;border-radius:16px;object-fit:cover;background:var(--paper);transition:transform .4s var(--ease)}
+  .next-btn:hover img{transform:scale(1.08) rotate(-2deg)}
+  .next-btn .eyebrow{display:block;margin-bottom:4px}
+  .next-btn strong{display:block;font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:-.01em}
+  .next-btn.prev{flex-direction:row}
+  .next-btn.next{flex-direction:row-reverse;text-align:right}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+    .card{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== HOME ===================== -->
+<main class="home" id="home">
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">Character Bible &middot; Edition One</p>
+      <h1 class="display">Little<br>Weather <em>Friends</em></h1>
+    </div>
+    <div>
+      <p class="lede">Ten small creatures who <strong>are</strong> the weather. Each one carries a feeling that children already know but cannot always name &mdash; the fizz of a sunny morning, the heaviness of a grey one.</p>
+      <div class="meta-row">
+        <div>Cast<b>10 characters</b></div>
+        <div>Format<b>Pre-school, 2&ndash;6</b></div>
+        <div>Core idea<b>Weather as feelings</b></div>
+      </div>
+    </div>
+  </header>
+
+  <ul class="grid" id="grid"></ul>
+
+  <footer class="colophon">
+    <span>Little Weather Friends &mdash; internal character bible</span>
+    <span>Click any friend &middot; press Esc to come back</span>
+  </footer>
+</main>
+
+<!-- ===================== DETAIL ===================== -->
+<section class="detail" id="detail" aria-hidden="true">
+  <div class="detail-bg" id="detailBg"></div>
+  <div class="backbar">
+    <button class="back" id="back" aria-label="Back to all friends">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      All friends
+    </button>
+    <div class="pager">
+      <button id="prev" aria-label="Previous friend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button id="next" aria-label="Next friend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+  </div>
+  <div class="detail-inner" id="detailInner"></div>
+</section>
+
+<script>
+const DATA = [
+  {
+    id:"sunny-sunshine", name:"Sunny Sunshine", element:"Sunshine", feeling:"Joy",
+    c:"#FBDA54", accent:"#B67C00", swatch:["#FBDA54","#F4B63F","#F291A8"],
+    role:"The warm one",
+    tagline:"Some mornings you wake up already smiling. That is Sunny, standing outside your window.",
+    bio:["Sunny is the first one up and the last one to stop humming. The little rainbow horn is not decorative — it is where the light gets in and comes back out again, which is why Sunny is the only friend who can make a rainbow on their own.",
+         "Sunny's flaw is generosity. Give too much warmth for too long and you get Dusty Drought. The group quietly keeps an eye on this."],
+    traits:["Warm","Early riser","Overgenerous"],
+    quote:"Come outside! I saved you the good bit of the morning.",
+    power:"Turns a grey mood a half-shade brighter just by standing near it",
+    move:"The Long Yawn Of Light — arms up, everything glows",
+    likes:["Breakfast outside","Washing on the line","Being counted on"],
+    dislikes:["Curtains","Being told to calm down"],
+    friend:"Joyful Rainbow",
+    home:"The east-facing window of every house"
+  },
+  {
+    id:"joyful-rainbow", name:"Joyful Rainbow", element:"Light after rain", feeling:"Hope",
+    c:"#D1B2F5", accent:"#6C43B8", swatch:["#D1B2F5","#F0574F","#3EAEE0"],
+    role:"The one who arrives after",
+    tagline:"Rainbow never turns up during the hard part. Rainbow turns up straight afterwards.",
+    bio:["Made entirely of every other friend's colour, Rainbow cannot exist without both Sunny and Sad Raindrop being in the same place at the same time. Rainbow is the proof that two opposite feelings can share a sky.",
+         "Shy about it, too. Rainbow appears, says almost nothing, and is gone in seven minutes. The gold horns are the only part that ever stays warm."],
+    traits:["Fleeting","Quietly kind","Impossible to plan"],
+    quote:"I only come when you have already got through the worst of it.",
+    power:"Shows up at the exact moment a friend has stopped crying",
+    move:"The Seven Minute Arc",
+    likes:["Puddles","Aftermath","Being pointed at"],
+    dislikes:["Being asked to stay","Cameras"],
+    friend:"Sad Raindrop",
+    home:"Directly opposite the sun, always"
+  },
+  {
+    id:"cheeky-tornado", name:"Cheeky Tornado", element:"Whirlwind", feeling:"Mischief",
+    c:"#B6CF7B", accent:"#1E7F6E", swatch:["#B6CF7B","#2FA8A0","#B9BCBC"],
+    role:"The trouble",
+    tagline:"Nothing is broken. Everything is just somewhere else now.",
+    bio:["Two spring-coiled horns, one enormous appetite for rearranging things. Cheeky spins through a tidy room and leaves it interesting. The smile is not an apology.",
+         "Adults find Cheeky exhausting. Children find Cheeky correct. Both are right — the trick the other friends have learnt is to give Cheeky a job before Cheeky finds one."],
+    traits:["Fast","Funny","Zero remorse"],
+    quote:"I didn't move your hat. Your hat went on an adventure.",
+    power:"Lifts anything not nailed down, including a mood",
+    move:"The Spin Cycle — three laps, no warning",
+    likes:["Leaf piles","Loose paper","Hats"],
+    dislikes:["Sitting still","The word 'careful'"],
+    friend:"Swirly Wirly Wind",
+    home:"Wherever something has just been tidied"
+  },
+  {
+    id:"swirly-wirly-wind", name:"Swirly Wirly Wind", element:"Wind", feeling:"Restlessness",
+    c:"#C5DBEE", accent:"#2F63C7", swatch:["#C5DBEE","#2E63D6","#FFFFFF"],
+    role:"The traveller",
+    tagline:"Never in one place, never really gone either.",
+    bio:["Swirly is the friend who is halfway out the door before the sentence finishes. The curled antlers catch every current going past, which is why Swirly always knows what the weather is doing three towns over.",
+         "Not flighty — searching. Swirly is the one who brings news, seeds, kites and other people's kites back to the group."],
+    traits:["Curious","Unsettled","Well-travelled"],
+    quote:"I can't stay. But I brought you something from somewhere.",
+    power:"Carries a message anywhere without ever writing it down",
+    move:"The Long Way Round",
+    likes:["Open windows","Kites","New smells"],
+    dislikes:["Closed rooms","Goodbyes"],
+    friend:"Cheeky Tornado",
+    home:"Between here and the next place"
+  },
+  {
+    id:"grumpy-thunderbolt", name:"Grumpy Thunderbolt", element:"Thunder", feeling:"Anger",
+    c:"#9DC6E7", accent:"#A67C00", swatch:["#9DC6E7","#F5D000","#8C8C8C"],
+    role:"The loud one",
+    tagline:"Big noise. Small creature. Enormous feelings with nowhere to put them.",
+    bio:["The scowl is real and so is the gold chain, worn because Grumpy thinks it looks tough. Everyone else thinks it looks lovely, and nobody says so.",
+         "Grumpy is the most misunderstood friend in the cast. The bolts are not weapons, they are pressure release. Once the rumble is out, Grumpy is the gentlest of the ten — and always slightly embarrassed."],
+    traits:["Loud","Fair","Softer than advertised"],
+    quote:"I'm NOT — ... I'm not shouting. I'm just at full volume.",
+    power:"Makes the whole sky flinch, then feels much better",
+    move:"One Bang, Then Sorry",
+    likes:["Hot chocolate","Being asked what's wrong","Winning arguments"],
+    dislikes:["Being ignored","Being told to smile"],
+    friend:"Sad Raindrop",
+    home:"Directly above the picnic"
+  },
+  {
+    id:"sad-raindrop", name:"Sad Raindrop", element:"Rain", feeling:"Sadness",
+    c:"#B6D8F7", accent:"#1B4FC4", swatch:["#B6D8F7","#1749CF","#8FC0EE"],
+    role:"The soft one",
+    tagline:"Not broken. Just full, and letting a bit out.",
+    bio:["Sad Raindrop is dotted all over with the drops already fallen. The mouth turns down and stays down, and the story never once asks Raindrop to cheer up.",
+         "This is the emotional centre of the whole cast. Everything green in the world exists because Raindrop had a hard day and let it out. The others sit with Raindrop rather than fix Raindrop — which is the lesson."],
+    traits:["Tender","Honest","Necessary"],
+    quote:"You can sit here with me. You don't have to say anything.",
+    power:"Makes things grow, purely by not holding it in",
+    move:"The Quiet Drizzle",
+    likes:["Being listened to","Window seats","Puddles afterwards"],
+    dislikes:["'Cheer up'","Being rushed"],
+    friend:"Joyful Rainbow",
+    home:"The grey afternoon"
+  },
+  {
+    id:"snowy-snowman", name:"Snowy Snowman", element:"Snow", feeling:"Calm",
+    c:"#C8E0F3", accent:"#B33227", swatch:["#C8E0F3","#CE3A2C","#1A1A1A"],
+    role:"The quiet one",
+    tagline:"Snowy does not arrive. Snowy simply is there when you open the curtains.",
+    bio:["The beanie and the red scarf were gifts and Snowy has never taken either off. Slowest mover in the cast, biggest pauses between sentences, and worth every one of them.",
+         "Snowy's gift is hush. Where Snowy stands, the noise of the world drops away and everyone remembers how to be still. Even Cheeky Tornado goes quiet."],
+    traits:["Still","Patient","Muffling"],
+    quote:"Listen. ...Hear that? That's the whole world being quiet.",
+    power:"Turns down the volume on everything within a mile",
+    move:"The Overnight Blanket",
+    likes:["First light on fresh snow","Mittens","Silence"],
+    dislikes:["Hurry","Central heating"],
+    friend:"Sleepy Moon",
+    home:"The morning nobody has walked on yet"
+  },
+  {
+    id:"sleepy-moon", name:"Sleepy Moon", element:"Night", feeling:"Tiredness",
+    c:"#C5C5C6", accent:"#3B4788", swatch:["#2A3462","#A9C0E8","#B9BDC2"],
+    role:"The keeper of endings",
+    tagline:"Every day has to finish somewhere. Sleepy Moon is where.",
+    bio:["Deep navy fur, silver crescent horns and a star-covered nightcap that has never once been washed. Sleepy Moon speaks in a low mumble and is asleep before the end of most conversations.",
+         "The oldest of the friends and the only one who has seen every single day the others have had. Sleepy Moon closes the story, every time, without fail."],
+    traits:["Ancient","Gentle","Nearly asleep"],
+    quote:"That's enough day for today. Come on. In you get.",
+    power:"Ends anything, kindly",
+    move:"The Slow Blink",
+    likes:["Last pages","Warm rooms","Being needed at bedtime"],
+    dislikes:["Alarm clocks","Just five more minutes"],
+    friend:"Snowy Snowman",
+    home:"The end of the last page"
+  },
+  {
+    id:"dusty-drought", name:"Dusty Drought", element:"Drought", feeling:"Longing",
+    c:"#FBAE1E", accent:"#B24E13", swatch:["#FBAE1E","#F2A184","#8E6A4A"],
+    role:"The one who waits",
+    tagline:"Cracked all over and grinning anyway. Dusty is very, very thirsty.",
+    bio:["Two front teeth, a permanent hopeful grin, and a body patterned with the cracks of a riverbed that has not seen water in a long while. Dusty is what happens when Sunny is kind for too many days in a row.",
+         "Never bitter about it. Dusty spends the whole story waiting for Sad Raindrop to turn up, and when Raindrop finally does, Dusty is the one who cheers."],
+    traits:["Patient","Hopeful","Parched"],
+    quote:"Any minute now. Any minute now, I reckon.",
+    power:"Endures — longer than anyone thinks is reasonable",
+    move:"The Long Wait",
+    likes:["The smell before rain","Shade","Promises"],
+    dislikes:["Another clear sky","Being poured a small glass"],
+    friend:"Sad Raindrop",
+    home:"The paddock at the end of summer"
+  },
+  {
+    id:"mr-muddy", name:"Mr Muddy", element:"Mud", feeling:"Play",
+    c:"#F0D4B5", accent:"#7A5326", swatch:["#F0D4B5","#8C6239","#7DBF4E"],
+    role:"The mess",
+    tagline:"The best bit of the storm is what it leaves on the ground.",
+    bio:["Shaggy, leaf-strewn, and wearing mud like mittens. Mr Muddy appears only after the rain and exists purely for the twenty glorious minutes before someone says 'shoes off'.",
+         "The most physical of the friends and the one children copy first. Mr Muddy is the argument that mess is not the opposite of a good day — it is the receipt."],
+    traits:["Joyful","Filthy","Unbothered"],
+    quote:"Every single puddle. That's the rule. Every single one.",
+    power:"Makes any ruined afternoon into the best one",
+    move:"The Both-Feet Jump",
+    likes:["Puddles","Worms","Wellington boots"],
+    dislikes:["The bath","New carpet"],
+    friend:"Sad Raindrop",
+    home:"The garden, ten minutes after the rain stops"
+  }
+];
+
+const $ = s => document.querySelector(s);
+const home = $("#home"), grid = $("#grid"), detail = $("#detail"), inner = $("#detailInner");
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const pad = n => String(n).padStart(2,"0");
+let current = -1, animating = false, savedScroll = 0;
+
+/* ---------- build grid ---------- */
+grid.innerHTML = DATA.map((d,i)=>`
+  <li>
+    <button class="card" data-i="${i}" style="--c:${d.c}" aria-label="Open ${d.name}">
+      <span class="card-media" id="cm-${i}">
+        <img src="images/${d.id}-thumb.webp" alt="${d.name}" width="600" height="600" loading="${i<6?'eager':'lazy'}" decoding="async">
+      </span>
+      <span class="card-body">
+        <span class="card-num">${pad(i+1)}</span>
+        <span class="card-name">${d.name}</span>
+      </span>
+      <span class="card-role">${d.role} &middot; ${d.feeling}</span>
+    </button>
+  </li>`).join("");
+
+/* reveal on scroll */
+const io = new IntersectionObserver((es)=>es.forEach(e=>{
+  if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+}),{rootMargin:"0px 0px -8% 0px"});
+document.querySelectorAll(".card").forEach((el,i)=>{ el.style.transitionDelay = (i%5)*60+"ms"; io.observe(el); });
+
+/* ---------- detail markup ---------- */
+function renderDetail(d,i){
+  const prev = DATA[(i-1+DATA.length)%DATA.length], next = DATA[(i+1)%DATA.length];
+  inner.innerHTML = `
+    <div class="hero-col">
+      <div class="hero-media" id="heroMedia">
+        <img src="images/${d.id}.webp" alt="${d.name}" width="1200" height="1200" decoding="async">
+      </div>
+      <div class="swatches fx" style="--i:6">
+        ${d.swatch.map(c=>`<span class="swatch"><i style="background:${c}"></i>${c.toUpperCase()}</span>`).join("")}
+      </div>
+    </div>
+    <div class="text-col">
+      <div class="d-eyebrow fx" style="--i:0">No. ${pad(i+1)} <span>${d.element}</span></div>
+      <h2 class="display d-name fx" style="--i:1">${d.name}</h2>
+      <p class="d-tagline fx" style="--i:2">${d.tagline}</p>
+      <div class="chips fx" style="--i:3">${d.traits.map(t=>`<span class="chip">${t}</span>`).join("")}</div>
+      <div class="d-bio fx" style="--i:4">${d.bio.map(p=>`<p>${p}</p>`).join("")}</div>
+      <blockquote class="quote fx" style="--i:5">
+        <p class="eyebrow">Catchphrase</p>
+        <p>&ldquo;${d.quote}&rdquo;</p>
+      </blockquote>
+      <dl class="specs fx" style="--i:6">
+        <div class="spec"><dt>Feeling</dt><dd><b>${d.feeling}</b></dd></div>
+        <div class="spec"><dt>Weather power</dt><dd>${d.power}</dd></div>
+        <div class="spec"><dt>Signature move</dt><dd>${d.move}</dd></div>
+        <div class="spec"><dt>Loves</dt><dd>${d.likes.join(" &middot; ")}</dd></div>
+        <div class="spec"><dt>Cannot stand</dt><dd>${d.dislikes.join(" &middot; ")}</dd></div>
+        <div class="spec"><dt>Closest friend</dt><dd>${d.friend}</dd></div>
+        <div class="spec"><dt>Found in</dt><dd>${d.home}</dd></div>
+      </dl>
+    </div>
+    <div class="next-strip fx" style="--i:7">
+      <button class="next-btn prev" data-go="${(i-1+DATA.length)%DATA.length}">
+        <img src="images/${prev.id}-thumb.webp" alt="" style="background:${prev.c}">
+        <span><span class="eyebrow">Previous</span><strong>${prev.name}</strong></span>
+      </button>
+      <button class="next-btn next" data-go="${(i+1)%DATA.length}">
+        <img src="images/${next.id}-thumb.webp" alt="" style="background:${next.c}">
+        <span><span class="eyebrow">Next</span><strong>${next.name}</strong></span>
+      </button>
+    </div>`;
+  detail.style.setProperty("--c", d.c);
+  detail.style.setProperty("--accent", d.accent);
+  detail.style.setProperty("--wash", `color-mix(in srgb, ${d.c} 15%, #FAF8F5)`);
+  document.title = `${d.name} — Little Weather Friends`;
+}
+
+const bg = $("#detailBg");
+const EASE = "cubic-bezier(.22,1,.36,1)";
+
+/* history is unavailable in sandboxed iframes (about:srcdoc) — degrade quietly */
+const CAN_HISTORY = (()=>{ try{ history.replaceState(null,"",location.href); return true; }catch(e){ return false; } })();
+const setUrl = h => { if(CAN_HISTORY){ try{ history.replaceState(null,"",h); }catch(e){} } };
+const readHash = () => { try{ return location.hash.slice(1); }catch(e){ return ""; } };
+
+/* ---------- open: shared-element FLIP from the grid card ---------- */
+function open(i){
+  if(animating) return; animating = true;
+  const d = DATA[i];
+  const card = document.getElementById("cm-"+i);
+  const from = card ? card.getBoundingClientRect() : null;
+  current = i;
+  savedScroll = window.scrollY;
+
+  renderDetail(d,i);
+  detail.setAttribute("aria-hidden","false");
+  detail.scrollTop = 0;
+  void detail.offsetWidth;            // flush styles so the .fx transitions actually run
+  detail.classList.add("open");
+  document.body.classList.add("is-locked");
+  setUrl("#"+d.id);
+
+  const hero = document.getElementById("heroMedia");
+
+  if(REDUCED || !from || !hero){ animating = false; return; }
+
+  const to = hero.getBoundingClientRect();
+  const s  = from.width / to.width;
+  const dx = from.left - to.left, dy = from.top - to.top;
+
+  hero.animate(
+    [{transform:`translate(${dx}px,${dy}px) scale(${s})`, borderRadius:`${22/s}px`},
+     {transform:"translate(0,0) scale(1)", borderRadius:"28px"}],
+    {duration:680, easing:EASE, fill:"backwards"}
+  );
+  bg.animate([{opacity:0},{opacity:1}], {duration:420, easing:"ease-out", fill:"backwards"});
+  home.animate([{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(.97)"}],
+    {duration:440, easing:"cubic-bezier(.55,0,.65,.2)", fill:"forwards"});
+
+  setTimeout(()=>{ animating = false; }, 340);
+}
+
+/* ---------- pager: stay in the detail view, cross-dissolve ---------- */
+function goTo(i, dir){
+  if(animating || current < 0) return; animating = true;
+  detail.scrollTop = 0;
+  renderDetail(DATA[i], i); current = i;
+  setUrl("#"+DATA[i].id);
+
+  if(REDUCED){ animating = false; return; }
+  const shift = dir > 0 ? 34 : -34;
+  bg.animate([{opacity:.4},{opacity:1}],{duration:420,easing:"ease-out",fill:"backwards"});
+  inner.querySelectorAll(".hero-col, .text-col, .next-strip").forEach((el,n)=>{
+    el.animate([{opacity:0, transform:`translateX(${shift}px)`},{opacity:1, transform:"none"}],
+      {duration:560, delay:n*45, easing:EASE, fill:"backwards"});
+  });
+  setTimeout(()=>{ animating = false; }, 300);
+}
+
+/* ---------- close: fly the hero back to its card ---------- */
+function close(){
+  if(animating || current < 0) return; animating = true;
+  const hero = document.getElementById("heroMedia");
+  const target = document.getElementById("cm-"+current);
+
+  const finish = ()=>{
+    detail.classList.remove("open");
+    detail.setAttribute("aria-hidden","true");
+    document.body.classList.remove("is-locked");
+    setUrl(location.pathname);
+    document.title = "Little Weather Friends — Character Bible";
+    current = -1; animating = false;
+  };
+
+  // release the scroll lock and put the destination card on screen before measuring
+  document.body.classList.remove("is-locked");
+  window.scrollTo(0, savedScroll);
+  if(target){
+    const r = target.getBoundingClientRect();
+    if(r.top < 80 || r.bottom > innerHeight - 40){
+      target.scrollIntoView({block:"center", behavior:"auto"});
+    }
+  }
+
+  home.animate([{opacity:0,transform:"scale(.97)"},{opacity:1,transform:"scale(1)"}],
+    {duration:540, easing:EASE, fill:"forwards"});
+
+  if(REDUCED || !hero || !target){ finish(); return; }
+
+  const from = hero.getBoundingClientRect();
+  const to   = target.getBoundingClientRect();
+  const s  = to.width / from.width;
+  const dx = to.left - from.left, dy = to.top - from.top;
+
+  inner.querySelectorAll(".fx").forEach(el=>{
+    el.animate([{opacity:1},{opacity:0}],{duration:200,easing:"ease-in",fill:"forwards"});
+  });
+  bg.animate([{opacity:1},{opacity:0}],{duration:520,easing:"ease-in",fill:"forwards"});
+  const a = hero.animate(
+    [{transform:"translate(0,0) scale(1)", borderRadius:"28px"},
+     {transform:`translate(${dx}px,${dy}px) scale(${s})`, borderRadius:`${22/s}px`}],
+    {duration:580, easing:EASE, fill:"forwards"}
+  );
+  a.onfinish = finish;
+}
+
+/* ---------- events ---------- */
+const step = n => goTo((current + n + DATA.length) % DATA.length, n);
+
+grid.addEventListener("click", e=>{
+  const b = e.target.closest(".card"); if(!b) return;
+  open(+b.dataset.i);
+});
+$("#back").addEventListener("click", close);
+$("#prev").addEventListener("click", ()=>step(-1));
+$("#next").addEventListener("click", ()=>step(1));
+inner.addEventListener("click", e=>{
+  const b = e.target.closest("[data-go]"); if(!b) return;
+  const i = +b.dataset.go;
+  goTo(i, i === (current+1)%DATA.length ? 1 : -1);
+});
+addEventListener("keydown", e=>{
+  if(current < 0) return;
+  if(e.key === "Escape"){ e.preventDefault(); close(); }
+  if(e.key === "ArrowLeft") step(-1);
+  if(e.key === "ArrowRight") step(1);
+});
+
+/* deep link */
+const h = readHash();
+const start = DATA.findIndex(d=>d.id===h);
+if(start > -1) requestAnimationFrame(()=>open(start));
+</script>
+</body>
+</html>
